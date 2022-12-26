@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-deployment                   #name of service
+spec:
+  replicas: 1                              # number of instant
+  selector:
+    matchLabels:
+      app: story                           #
+  template:
+    metadata:
+      labels:
+        app: story
+    spec:
+      containers:
+        - name: story
+          image: pvquyet/kub-data-demo:3
+          env:                              # env
+            - name: STORY_FOLDER
+              #value: 'story'               # env by name
+              valueFrom:                    # env by configMap
+                configMapKeyRef: 
+                  name: data-store-env
+                  key: folder
+          volumeMounts:                     # mount volume
+            - mountPath: /app/story
+              name: story-volume
+      volumes:
+        - name: story-volume
+          # hostPath:                       # host volume in host/worker node
+          #   path: /data
+          #   type:  DirectoryOrCreate
+          # --------------
+          # emptyDir: {}                    # empty volume in pods
+          # -------------
+          persistentVolumeClaim:            # persistentVolume in cluser
+            claimName: host-pvc

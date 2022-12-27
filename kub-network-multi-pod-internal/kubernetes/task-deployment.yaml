@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasks-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tasks
+  template:
+    metadata:
+      labels:
+        app: tasks
+    spec: 
+      containers:
+        - name: tasks
+          image: pvquyet/kub-demo-tasks:latest         # tag latest => allway pull latest image in docker hub
+          env:
+            - name: AUTH_ADDRESS
+              # value: "10.99.74.9"                    # local cluster IP for auth service (static IP)
+              value: "auth-service.default"             # auto generate Domain name = service name + . + namespace (kubectl get namespace) - build in CoreDNS feature *** most common way
+            - name: TASKS_FOLDER
+              value: tasks
+          volumeMounts:                     # mount volume
+            - mountPath: /app/tasks
+              name: tasks-volume
+      volumes:
+        - name: tasks-volume
+          emptyDir: {}                    # empty volume in pods

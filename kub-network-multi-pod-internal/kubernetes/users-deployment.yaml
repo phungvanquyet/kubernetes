@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users
+  template:
+    metadata:
+      labels:
+        app: users
+    spec: 
+      containers:
+        - name: users
+          image: pvquyet/kub-demo-users:latest         # tag latest => allway pull latest image in docker hub
+          env:
+            - name: AUTH_ADDRESS
+              # value: "10.99.74.9"                    # local cluster IP for auth service (static IP)
+              value: "auth-service.default"             # auto generate Domain name = service name + . + namespace (kubectl get namespace) - build in CoreDNS feature *** most common way

@@ -18,4 +18,5 @@ spec:
           env:
             - name: AUTH_ADDRESS
               # value: "10.99.74.9"                    # local cluster IP for auth service (static IP)
-              value: "auth-service.default"             # auto generate Domain name = service name + . + namespace (kubectl get namespace) - build in CoreDNS feature *** most common way
+              value: "auth-service.default"            # auto generate Domain name = service name + . + namespace (kubectl get namespace) - build in CoreDNS feature *** most common way
+            #- name: AUTH_SERVICE_SERVICE_HOST         # auto generate service env name = SERVICE_NAME + _SERVICE_HOST // default service env so it can't set in here
